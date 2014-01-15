@@ -27,7 +27,7 @@
 //     Котёнок загружен.
 //     <a href="docs">Код</a>.
 //   </h3>
-//   <img></img>
+//   <img src="bad-url"></img>
 // </template>
 // ```
 //
