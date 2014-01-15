@@ -20,3 +20,21 @@ code {
   margin: auto;
 }
 
+
+ul {
+  margin: 0;
+}
+
+h2 {
+  margin: 1em 0 0 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0.5em 1em;
+}
+
+li {
+  padding: 0.2em 0;
+}
+
