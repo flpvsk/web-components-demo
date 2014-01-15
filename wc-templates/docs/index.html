@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Пример использования тега &lt;template&gt;</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="-lt-template-gt-">Пример использования тега &lt;template&gt;</h1>
+<h2 id="-a-href-a-"><a href="..">Демо</a></h2>
+<h2 id="-a-href-a-"><a href="">Статья</a></h2>
+<p>Содержимое &lt;body&gt; на момент загрузки страницы:</p>
+<pre><code>&lt;div id=&quot;wait-for-it&quot;&gt;
+  &lt;h3&gt;
+    Откройте вкладку Network в DevTools,
+    картика начнёт грузится
+    через &lt;span id=&quot;seconds&quot;&gt;3&lt;/span&gt;...
+  &lt;/h3&gt;
+&lt;/div&gt;
+</code></pre><p>Тег &lt;template&gt; находится в &lt;head&gt; документа.  После
+загрузки, браузер парсит его содержимое, но больше ничего не делает.
+Картинки не загружаются, скрипты не запускаются до тех пор, пока
+content шаблона не вставлен в DOM.</p>
+<pre><code>&lt;template id=&quot;img-with-caption&quot;&gt;
+  &lt;h3&gt;
+    Шаблон вставлен в DOM.
+    Котёнок загружен.
+    &lt;a href=&quot;docs&quot;&gt;Код&lt;/a&gt;.
+  &lt;/h3&gt;
+  &lt;img&gt;&lt;/img&gt;
+&lt;/template&gt;
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-string">'.'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  window.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Сохраняю ссылки на элементы.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> seconds = <span class="hljs-number">3</span>,
+        secondsEl = document.querySelector(<span class="hljs-string">'#seconds'</span>),
+        template = document.querySelector(<span class="hljs-string">'#img-with-caption'</span>),
+        waitForItEl = document.querySelector(<span class="hljs-string">'#wait-for-it'</span>),
+        interval;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Раз в секунду, обновляю отсчёт.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    interval = setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span> templateBody, imgEl;
+
+      seconds -= <span class="hljs-number">1</span>;
+      secondsEl.innerText = seconds;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Если пора...</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (seconds &lt;= <span class="hljs-number">0</span>) {
+        clearInterval(interval);
+
+        imgEl = template.content.querySelector(<span class="hljs-string">'img'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Подставляю данные в шаблон.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        imgEl.src = <span class="hljs-string">'kitten.jpeg'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Импортирую шаблон в DOM.
+<strong>После этого вызова картинка начнёт загружаться.</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        templateBody = document.importNode(template.content);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Изменяю содержимое &lt;body&gt; документа.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        document.body.replaceChild(templateBody, waitForItEl);
+      }
+
+    }, <span class="hljs-number">1000</span>)
+
+  };
+
+})();</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
