@@ -1,9 +1,78 @@
 <!DOCTYPE html>
 <html>
+
+  <meta charset="utf-8">
+
+  <head>
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      img {
+        width: 95%;
+        border: 1px solid #666;
+        margin: auto;
+      }
+
+      audio::-webkit-media-controls-panel {
+        background-color: green;
+      }
+
+      code {
+        display: block;
+        margin: 10px 0;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+    </style>
+  </head>
+
   <body>
-    <audio
-      controls
-      src="https://dl.dropboxusercontent.com/u/31025187/youguide-audio/38912360-2da0-11e3-bab7-e1953a1b62ea/1.wav">
-    </audio>
+
+    <div class="center">
+      <audio
+        controls
+        src="http://ccmixter.org/content/flatwound/flatwound_-_The_Long_Goodbye.mp3">
+      </audio>
+    </div>
+
+    <p>
+      &lt;audio&gt; и некоторые другие элементы в браузере представлены с
+      помощью <strong>Shadow DOM</strong>.
+    </p>
+
+    <p>
+      Чтобы заглянуть "под капот" таким элементам, в настройках Chrome
+      DevTools, вкладка <strong>General</strong>, раздел
+        <strong>Elements</strong> нужно поставить галочку <strong>Show
+          Shadow DOM</strong>.
+    </p>
+
+    <p>
+      Тогда в разделе <strong>Elements</strong> в DevTools у &lt;audio&gt;
+    появится потомок '#shadow-root (user-agent)':
+    </p>
+
+    <div class="center">
+      <img src="devtools.png"></img>
+    </div>
+
+    <p>
+      Используйте псевдо-селекторы, чтобы изменить представление элементов
+      <strong>Shadow DOM</strong>. Например, чтобы сделать панель
+      &lt;audio&gt; зелёной, добавьте это в стили:
+
+      <code>
+        audio::-webkit-media-controls-panel {
+          background-color: green;
+        }
+      </code>
+    </p>
   </body>
 </html>
