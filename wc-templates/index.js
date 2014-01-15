@@ -4,7 +4,7 @@
 // ## <a href="">Статья</a>
 //
 //
-// Содержимое &lt;body&gt; на момент загрузки страницы:
+// Контент на момент загрузки страницы:
 //
 // ```
 // <div id="wait-for-it">
@@ -67,8 +67,9 @@
         // **После этого вызова картинка начнёт загружаться.**
         templateBody = document.importNode(template.content);
 
-        // Изменяю содержимое &lt;body&gt; документа.
-        document.body.replaceChild(templateBody, waitForItEl);
+        // Изменяю содержимое документа.
+        // Вставляю то что импортировал шагом раньше.
+        waitForItEl.parentNode.replaceChild(templateBody, waitForItEl);
       }
 
     }, 1000)

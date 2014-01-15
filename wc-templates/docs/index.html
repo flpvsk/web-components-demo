@@ -24,7 +24,7 @@
               <h1 id="-lt-template-gt-">Пример использования тега &lt;template&gt;</h1>
 <h2 id="-a-href-a-"><a href="..">Демо</a></h2>
 <h2 id="-a-href-a-"><a href="">Статья</a></h2>
-<p>Содержимое &lt;body&gt; на момент загрузки страницы:</p>
+<p>Контент на момент загрузки страницы:</p>
 <pre><code>&lt;div id=&quot;wait-for-it&quot;&gt;
   &lt;h3&gt;
     Откройте вкладку Network в DevTools,
@@ -173,11 +173,12 @@ content шаблона не вставлен в DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Изменяю содержимое &lt;body&gt; документа.</p>
+              <p>Изменяю содержимое документа.
+Вставляю то что импортировал шагом раньше.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        document.body.replaceChild(templateBody, waitForItEl);
+            <div class="content"><div class='highlight'><pre>        waitForItEl.parentNode.replaceChild(templateBody, waitForItEl);
       }
 
     }, <span class="hljs-number">1000</span>)

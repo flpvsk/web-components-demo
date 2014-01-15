@@ -1,0 +1,22 @@
+html {
+  font-family: sans-serif;
+  line-height: 1.5em;
+}
+
+.center {
+  text-align: center;
+}
+
+code {
+  display: block;
+  margin: 10px 0;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+.content {
+  max-width: 600px;
+  margin: auto;
+}
+
