@@ -8,10 +8,8 @@ html {
 }
 
 code {
-  display: block;
-  margin: 10px 0;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Source Code Pro', 'monospaced';
 }
 
 

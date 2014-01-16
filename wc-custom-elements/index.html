@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8"></meta>
+    <link rel="stylesheet" href="../common/main.css" type="text/css"
+        media="screen">
+
+    <link
+    href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400'
+    rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript"
+      src="../common/highlight/highlight.pack.js"></script>
+
+    <link rel="stylesheet" href="../common/highlight/styles/dark.css"
+      type="text/css" media="screen">
+
+    <template id="wc-example-tmpl">
+      <style>
+        [data-code] {
+          position: relative;
+          padding-left: 1em;
+          padding-bottom: 2em;
+        }
+
+        [data-code]:after, .preview:after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          border-left: 1px solid;
+          border-bottom: 1px solid;
+          min-width: 4em;
+          height: 1.5em;
+          text-align: center;
+          line-height: 1.5em;
+        }
+
+        [data-code=markup]:after, [data-code=tmpl]:after {
+          content: 'HTML';
+        }
+
+        [data-code=js]:after {
+          content: 'JS';
+        }
+
+        .preview {
+          position: relative;
+          border: 1px solid #444;
+          padding: 4em 2em;
+        }
+
+        .preview:after {
+          content: 'PREVIEW';
+          padding: 0 1em;
+          font-size: 0.9em;
+        }
+      </style>
+
+      <content select="article"></content>
+
+      <pre><code data-code="tmpl" class="html"></code></pre>
+      <pre><code data-code="markup"></code></pre>
+      <pre><code data-code="js"></code></pre>
+
+      <div class="preview"></div>
+    </template>
+
+  </head>
+
+  <body>
+
+    <div class="content">
+      <wc-example>
+        <article>
+          <h2>1. Зелёный свет</h2>
+          <p>
+            Стили, которые определёны в <strong>Shadow Tree</strong>
+            распространяются только внутри этого дерева. На странице есть и
+            другие <code>divы</code>, но только здесь он зелёный.
+          </p>
+        </article>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#tmpl-green'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+
+        <template id="tmpl-green">
+          <style>
+            div { background-color: green; }
+          </style>
+
+          <div>Зелёный</div>
+        </template>
+
+
+        <wc-markup>
+          <div class="shadow-host"></div>
+        </wc-markup>
+      </wc-example>
+    </div>
+
+  </body>
+
+</html>
