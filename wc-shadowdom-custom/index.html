@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+
+  <head>
+
+    <link rel="stylesheet"
+      href="../common/main.css" type="text/css" media="screen">
+
+    <style>
+      .shadow-host {
+        border: 3px solid #333;
+        margin-bottom: 20px;
+      }
+    </style>
+
+    <script src="index.js"></script>
+
+    <template id="replacer">
+      <p>
+        По-умолчанию, если элемент &mdash; <strong>Shadow Host</strong>,
+        браузер отображает только содержимое его <strong>Shadow
+        DOM</strong>, скрывая содержимое самого элемента.
+      </p>
+      <p>
+        Этот текст находится в <strong>Shadow DOM</strong> элемента,
+        поэтому вы видите его.
+      </p>
+    </template>
+
+    <template id="content-tag">
+      <p>
+        В <strong>Shadow DOM</strong> можно использовать содержимое хоста
+        с помощью тега &lt;content&gt;.
+      </p>
+      <p>Ниже полное содержимое хоста:</p>
+      <content></content>
+    </template>
+
+    <template id="content-select-attr">
+      <p>
+        С помощью атрибута <code>select</code> элемента &lt;content&gt;
+        можно выборочно вставлять фрагменты содержимого <strong>Shadow
+        Host</strong> в <strong>Shadow DOM</strong>:
+      </p>
+
+
+      <h1>Просто</h1>
+      <content select=".description"></content>
+      <content select=".name"></content>
+
+    </template>
+  </head>
+
+  <body>
+
+    <div class="content">
+
+      <h2>
+        <a href="..">ГЛАВНАЯ</a> |
+        <a href="docs">КОД ПРИМЕРА</a>
+      </h2>
+
+      <p>
+        <strong>Shadow Host</strong> &mdash; тот элемент, который
+        содержит <strong>Shadow DOM</strong>. Он указывает браузеру, в
+        какое место на странице вставить теневую разметку. У него есть
+        ещё одна задача. <strong>Shadow Host</strong> также служит
+        контейнером для данных, которые <strong>Shadow DOM</strong>
+        использует с помощью тега &lt;content&gt;.
+      </p>
+
+      <p>
+        Допустим, мы делаем сайт, посвещённый домашним животным. Описание
+        собаки на сайте выглядит так:
+
+        <pre>
+          &lt;div class="shadow-host center"&gt;
+            &lt;h1 class="name"&gt;Варлам&lt;/h1&gt;
+            &lt;img src="http://placedog.com/400/300"&gt;&lt;/img&gt;
+            &lt;p class="description"&gt;Бодрый Пёс&lt;/p&gt;
+          &lt;/div&gt;
+        </pre>
+      </p>
+
+      <div class="shadow-host center">
+        <h1 class="name">Варлам</h1>
+        <img src="varlam.png"></img>
+        <p class="description">Бодрый Пёс</p>
+      </div>
+
+      <p>
+        Теперь я сделаю из <samp>div.shadow-root</samp> <strong>Shadow
+          Host</strong>. И подставлю в его <strong>Shadow DOM</strong>
+        различное содержимое. Что получается вы видите ниже. Сначала
+        разметка, которая вставлена в <strong>Shadow DOM</strong> элемента
+        <samp>div.shadow-root</samp>, затем то, как это рендерится в
+        браузере.
+      </p>
+
+    </div>
+
+  </body>
+
+</html>
