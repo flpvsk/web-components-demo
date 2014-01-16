@@ -1,4 +1,4 @@
-// # Пример кастомного Shadow Tree
+// #
 // ## [ГЛАВНАЯ](../..) | [ДЕМО](..)
 '.';
 
@@ -22,7 +22,7 @@
           shadowRoot;
 
       // Создаю <strong>Shadow Root</strong> для элемента,
-      // который будет содержать <strong>Shadow Tree</strong>.
+      // который будет содержать <strong>Shadow DOM</strong>.
       // Сам элемент таким образом становится
       // <strong>Shadow Host</strong>.
       shadowRoot = shadowHostClone.createShadowRoot();
@@ -35,8 +35,24 @@
       pEl.appendChild(templateHeaderEl);
       pEl.appendChild(templatePreEl);
 
-      // Добавляю содержимое шаблона в <strong>Shadow Tree</strong> хоста.
+      // Добавляю содержимое шаблона в <strong>Shadow DOM</strong> хоста.
       shadowRoot.appendChild(templateBody);
+
+      if (template.className.indexOf('reset-style-inheritance') >= 0) {
+        // По-умолчанию наследуемые стили, такие как <code>color</code>,
+        // <code>font-size</code> и
+        // [другие](http://www.impressivewebs.com/inherit-value-css/),
+        // имеют влияние на <strong>Shadow DOM</strong>.
+        //
+        // <code>resetStyleInheritance</code> позволит этого избежать.
+        shadowRoot.resetStyleInheritance = true;
+      }
+
+      if (template.className.indexOf('apply-author-styles') >= 0) {
+        // Свойство <code>applyAuthorStyles</code> позволяет авторским
+        // стилям проникнуть в <strong>Shadow DOM</strong>.
+        shadowRoot.applyAuthorStyles = true;
+      }
 
       // Добавляю описание шаблона на страницу.
       contentEl.appendChild(pEl);

@@ -24,7 +24,7 @@
 
     <div class="content">
       <div class="center">
-        <h1>&lt;audio&gt; Shadow DOM</h1>
+        <h1>&lt;audio&gt; Shadow Tree</h1>
       </div>
       <div class="center">
         <audio
@@ -35,20 +35,20 @@
 
       <p>
         &lt;audio&gt; и некоторые другие элементы в браузере представлены с
-        помощью <strong>Shadow DOM</strong>.
+        помощью <strong>Shadow Tree</strong>.
       </p>
 
       <p>
         Чтобы заглянуть "под капот" таким элементам, в настройках Chrome
         DevTools, вкладка <strong>General</strong>, раздел
           <strong>Elements</strong>, нужно поставить галочку <strong>Show
-            Shadow DOM</strong>.
+            Shadow Tree</strong>.
       </p>
 
       <p>
         Тогда в закладке <strong>Elements</strong> в DevTools у &lt;audio&gt;
         появится потомок '#shadow-root (user-agent)'. Это и есть
-        <strong>Shadow DOM</strong>:
+        <strong>Shadow Tree</strong>:
       </p>
 
       <div class="center">
@@ -57,7 +57,7 @@
 
       <p>
         Используйте псевдо-селекторы, чтобы изменить представление
-        браузерных элементов, использующих <strong>Shadow DOM</strong>. К
+        браузерных элементов, использующих <strong>Shadow Tree</strong>. К
         таким элементам относятся &lt;input type="range"&gt;, &lt;video&gt;
         и другие. Например, чтобы сделать панель &lt;audio&gt; зелёной,
         добавьте это в стили:

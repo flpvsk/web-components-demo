@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+  <meta charset="utf-8">
+
+  <head>
+    <link rel="stylesheet" href="../common/main.css" type="text/css" media="screen">
+
+    <script src="index.js"></script>
+
+    <style>
+      .shadow-host {
+        border: 3px solid #333;
+        margin-bottom: 20px;
+        padding: 20px;
+      }
+
+      .border {
+        border: 3px dashed red;
+      }
+
+      .shadow-host ^ .shadow-p {
+        color: red;
+      }
+
+
+      .shadow-host:last-child::x-p {
+        background-color: red;
+      }
+
+      .shadow-host ^ pre {
+        background-color: rgba(0,0,0,0.1);
+      }
+
+    </style>
+
+    <template id="color-green">
+      <style>
+        div { background-color: green; }
+      </style>
+
+      <p>
+        Стили, которые определёны в <strong>Shadow Tree</strong>
+        распространяются только внутри этого дерева. На странице есть и
+        другие <code>divы</code>, но только здесь он зелёный.
+      </p>
+
+      <div>зелёный</div>
+    </template>
+
+    <template id="color-host">
+      <style>
+        :host {
+          background-color: aqua;
+        }
+      </style>
+
+      Изменить стили хоста можно с помощью специального селектора
+      <code>:host</code>:
+      <content></content>
+    </template>
+
+
+    <template id="reset-style-inheritance"
+      class="reset-style-inheritance">
+      <p>
+        По-умолчанию наследуемые стили, такие как <code>color</code>,
+        <code>font-size</code> и
+        <a href="http://www.impressivewebs.com/inherit-value-css/">
+          другие
+        </a>, имеют влияние на <strong>Shadow Tree</strong>.
+
+        <code>shadowRoot.resetStyleInheritance = true</code>
+        позволяет этого избежать.
+      </p>
+
+      <p>В этом примере шрифты сброшены.</p>
+
+      <content></content>
+    </template>
+
+
+    <template id="dont-apply-author-styles">
+      <p>
+        Свойство <samp>applyAuthorStyles</samp> позволяет авторским
+        стилям проникнуть в <strong>Shadow Tree</strong>.
+      </p>
+      <p>
+        В стилях документа есть описание класса <samp>.border</samp>.
+        В случае, если <samp>applyAuthorStyles = false</samp>, рамки нет:
+      </p>
+      <pre>
+
+        /* В стилях документа */
+        .border {
+          border: 3px dashed red;
+        }
+      </pre>
+
+      <div class="border">div.border</div>
+
+
+    </template>
+
+    <template id="apply-author-styles" class="apply-author-styles">
+      <p>
+        В случае, если <samp>applyAuthorStyles = true</samp>, рамка есть:
+      </p>
+
+      <div class="border">div.border</div>
+
+    </template>
+
+
+    <template id="hat">
+      <p>
+        `Шляпа` <code>^</code> и `котэ` <code>^^</code> &mdash;
+        дополнительные возможности стилизовать элементы
+        <strong>Shadow Tree</strong>.
+      </p>
+      <p>
+        Селектор <code>div ^ p</code> аналогичен <code>div p</code> с тем
+        исключением, что он пересекает одну теневую границу (
+        <strong>Shadow Boundary</strong>).
+      </p>
+      <p>
+        Селектор <code>div ^^ p</code> аналогичен <code>div p</code>
+        аналогичен предыдущему, только пересекает ЛЮБОЕ количество границ
+        теневого дерева.
+      </p>
+
+      <pre>
+
+        /* В стилях документа */
+        .shadow-root ^ p.shadow-p {
+          color: red;
+        }
+      </pre>
+
+      <p class="shadow-p">
+        Это красный текст.
+      </p>
+    </template>
+
+    <template id="pseudo-element">
+      <p>
+        Определяйте свои <code>pseudo</code> селекторы, чтобы упростить
+        стилизацию виджета.
+      </p>
+      <pre>
+
+        /* В стилях документа */
+        ::my-pseudo {
+          background-color: red;
+        }
+      </pre>
+
+      <p pseudo="x-p">xx</p>
+
+    </template>
+  </head>
+
+  <body>
+
+    <div class="content">
+
+      <div class="shadow-host">
+
+        <div>
+          <h4>I'm h4</h4>
+          <p>I'm p</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
