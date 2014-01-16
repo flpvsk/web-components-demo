@@ -61,6 +61,8 @@
         <a href="docs">КОД ПРИМЕРА</a>
       </h2>
 
+      <h1>Пример кастомного Shadow DOM</h1>
+
       <p>
         <strong>Shadow Host</strong> &mdash; тот элемент, который
         содержит <strong>Shadow DOM</strong>. Он указывает браузеру, в
@@ -75,7 +77,7 @@
         собаки на сайте выглядит так:
 
         <pre>
-          &lt;div class="shadow-host center"&gt;
+          &lt;div class="shadow-host"&gt;
             &lt;h1 class="name"&gt;Варлам&lt;/h1&gt;
             &lt;img src="http://placedog.com/400/300"&gt;&lt;/img&gt;
             &lt;p class="description"&gt;Бодрый Пёс&lt;/p&gt;
@@ -92,8 +94,8 @@
       <p>
         Теперь я сделаю из <samp>div.shadow-root</samp> <strong>Shadow
           Host</strong>. И подставлю в его <strong>Shadow DOM</strong>
-        различное содержимое. Что получается вы видите ниже. Сначала
-        разметка, которая вставлена в <strong>Shadow DOM</strong> элемента
+        различное содержимое. Что получается вы видите ниже. Сначала код
+        шаблона, который вставлен в <strong>Shadow DOM</strong> элемента
         <samp>div.shadow-root</samp>, затем то, как это рендерится в
         браузере.
       </p>
