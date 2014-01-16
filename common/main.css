@@ -38,3 +38,7 @@ li {
   padding: 0.2em 0;
 }
 
+.warning {
+  background-color: rgba(237, 78, 66, 0.5);
+  padding: 1.5em;
+}
