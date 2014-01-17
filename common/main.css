@@ -3,15 +3,16 @@ html {
   line-height: 1.5em;
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
 .center {
   text-align: center;
 }
 
 code {
-  display: block;
-  margin: 10px 0;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.1);
+  font-family: 'Source Code Pro', 'monospaced';
 }
 
 
@@ -19,7 +20,6 @@ code {
   max-width: 600px;
   margin: auto;
 }
-
 
 ul {
   margin: 0;
