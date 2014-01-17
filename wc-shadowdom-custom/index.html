@@ -7,49 +7,16 @@
     <link rel="stylesheet"
       href="../common/main.css" type="text/css" media="screen">
 
-    <style>
-      .shadow-host {
-        border: 3px solid #333;
-        margin-bottom: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="../common/main.css"
+      type="text/css" media="screen">
 
-    <script src="index.js"></script>
+    <link rel="stylesheet" href="../common/highlight/styles/dark.css"
+      type="text/css" media="screen">
 
-    <template id="replacer">
-      <p>
-        По-умолчанию, если элемент &mdash; <strong>Shadow Host</strong>,
-        браузер отображает только содержимое его <strong>Shadow
-        DOM</strong>, скрывая содержимое самого элемента.
-      </p>
-      <p>
-        Этот текст находится в <strong>Shadow Tree</strong> элемента,
-        поэтому вы видите его.
-      </p>
-    </template>
+    <link rel="import" href="../../common/wc-example.html">
 
-    <template id="content-tag">
-      <p>
-        В <strong>Shadow Tree</strong> можно использовать содержимое хоста
-        с помощью тега &lt;content&gt;.
-      </p>
-      <p>Ниже полное содержимое хоста:</p>
-      <content></content>
-    </template>
+    <!--script src="index.js"></script-->
 
-    <template id="content-select-attr">
-      <p>
-        С помощью атрибута <code>select</code> элемента &lt;content&gt;
-        можно выборочно вставлять фрагменты содержимого <strong>Shadow
-        Host</strong> в <strong>Shadow Tree</strong>:
-      </p>
-
-
-      <h1>Просто</h1>
-      <content select=".description"></content>
-      <content select=".name"></content>
-
-    </template>
   </head>
 
   <body>
@@ -57,25 +24,37 @@
     <div class="content">
 
       <h2>
-        <a href="..">ГЛАВНАЯ</a> |
-        <a href="docs">КОД ПРИМЕРА</a>
+        <a href="..">ГЛАВНАЯ</a>
       </h2>
 
-      <h1>Пример кастомного Shadow Tree</h1>
+      <h1>Примеры кастомного Shadow Tree.</h1>
 
-      <p class="warning center">
+      <div class="warning">
         Работает в
 
         <a href="https://www.google.com/intl/en/chrome/browser/canary.html">
           Chrome Canary</a>
 
-        со включенным флагом<br>
-        <em>Experimental Web Platform features</em>!<br><br>
+        со включенными флагами:
+        <ul>
+          <li><em>Experimental Web Platform features</em></li>
+          <li><em>Enable HTML Imports</em></li>
+        </ul>
 
-        Ссылка на флаг (копипасть):<br>
+        Ссылки на флаги (копипасть):<br>
 
-        <em>chrome://flags/#enable-experimental-web-platform-features</em>
-      </p>
+        <ul>
+          <li>
+            <em>
+              chrome://flags/#enable-experimental-web-platform-features
+            </em>
+          </li>
+          <li>
+            <em>chrome://flags/#enable-html-imports</em>
+          </li>
+        </ul>
+
+      </div>
 
       <p>
         <strong>Shadow Host</strong> &mdash; тот элемент, который
@@ -86,33 +65,115 @@
         использует с помощью тега &lt;content&gt;.
       </p>
 
-      <p>
-        Допустим, мы делаем сайт, посвещённый домашним животным. Описание
-        собаки на сайте выглядит так:
+      <wc-example>
+        <article>
+          <h2 id="1">1. Shadow Tree скрывает содержимое элемента.</h2>
+          <p>
+            По-умолчанию, если элемент &mdash; <strong>Shadow
+              Host</strong>, браузер отображает только содержимое его
+            <strong>Shadow Tree</strong>, скрывая содержимое самого
+            элемента.
+          </p>
+        </article>
 
-        <pre>
-          &lt;div class="shadow-host"&gt;
-            &lt;h1 class="name"&gt;Варлам&lt;/h1&gt;
-            &lt;img src="http://placedog.com/400/300"&gt;&lt;/img&gt;
-            &lt;p class="description"&gt;Бодрый Пёс&lt;/p&gt;
-          &lt;/div&gt;
-        </pre>
-      </p>
+        <template id="replacer-tmpl">
+          <p>
+            Этот текст находится в
+            <strong>Shadow Tree</strong> элемента,
+            поэтому вы видите его.
+          </p>
+        </template>
 
-      <div class="shadow-host center">
-        <h1 class="name">Варлам</h1>
-        <img src="varlam.png"></img>
-        <p class="description">Бодрый Пёс</p>
-      </div>
+        <wc-markup>
+          <div class="shadow-host">
+            <h1 class="name">Варлам</h1>
+            <img src="varlam.png"></img>
+            <p class="description">Бодрый Пёс</p>
+          </div>
+        </wc-markup>
 
-      <p>
-        Теперь я сделаю из <samp>div.shadow-root</samp> <strong>Shadow
-          Host</strong>. И подставлю в его <strong>Shadow Tree</strong>
-        различное содержимое. Что получается вы видите ниже. Сначала код
-        шаблона, который вставлен в <strong>Shadow Tree</strong> элемента
-        <samp>div.shadow-root</samp>, затем то, как это рендерится в
-        браузере.
-      </p>
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#replacer-tmpl'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example>
+        <article>
+          <h2 id="2">2. Проецирование, тег &lt;content&gt;.</h2>
+          <p>
+            Чтобы использовать содержимое хоста в
+            <strong>Shadow Tree</strong>, нужен тег &lt;content&gt;.
+          </p>
+        </article>
+
+        <template id="content-tag">
+          <p>
+            Это содержимое
+            <strong>shadow tree</strong>.
+          </p>
+          <p>
+            Ниже проекция содержимого
+            <strong>shadow host</strong>:
+          </p>
+          <content></content>
+        </template>
+
+        <wc-markup>
+          <div class="shadow-host">
+            <h1 class="name">Варлам</h1>
+            <img src="varlam.png"></img>
+            <p class="description">Бодрый Пёс</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#content-tag'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example>
+        <article>
+          <h2 id="3">
+            3. Проецирование фрагментов хоста с помощью <em>select</em>.
+          </h2>
+          <p>
+            Используйте атрибут <code>select</code> элемента
+            &lt;content&gt;, чтобы выборочно вставлять фрагменты
+            содержимого <strong>Shadow Host</strong> в <strong>Shadow
+            Tree</strong>:
+          </p>
+        </article>
+
+        <template id="content-select">
+          <h1>Просто</h1>
+          <content select=".description"></content>
+          <content select=".name"></content>
+        </template>
+
+        <wc-markup>
+          <div class="shadow-host">
+            <h1 class="name">Варлам</h1>
+            <img src="varlam.png"></img>
+            <p class="description">Бодрый Пёс</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#content-select'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
 
     </div>
 

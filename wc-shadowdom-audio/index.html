@@ -4,7 +4,8 @@
   <meta charset="utf-8">
 
   <head>
-    <link rel="stylesheet" href="../common/main.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="../common/main.css" type="text/css"
+    media="screen">
 
     <style>
       img {
@@ -42,13 +43,13 @@
         Чтобы заглянуть "под капот" таким элементам, в настройках Chrome
         DevTools, вкладка <strong>General</strong>, раздел
           <strong>Elements</strong>, нужно поставить галочку <strong>Show
-            Shadow Tree</strong>.
+            Shadow DOM</strong>.
       </p>
 
       <p>
-        Тогда в закладке <strong>Elements</strong> в DevTools у &lt;audio&gt;
-        появится потомок '#shadow-root (user-agent)'. Это и есть
-        <strong>Shadow Tree</strong>:
+        Тогда в закладке <strong>Elements</strong> в DevTools у
+        &lt;audio&gt; появится потомок '#shadow-root (user-agent)'. Это и
+        есть <strong>Shadow DOM</strong>:
       </p>
 
       <div class="center">
@@ -57,8 +58,10 @@
 
       <p>
         Используйте псевдо-селекторы, чтобы изменить представление
-        браузерных элементов, использующих <strong>Shadow Tree</strong>. К
-        таким элементам относятся &lt;input type="range"&gt;, &lt;video&gt;
+        браузерных элементов, использующих <strong>shadow DOM</strong>. К
+        таким элементам относятся
+        <code>&lt;input type="range"&gt;</code>,
+        <code>&lt;video&gt;</code>
         и другие. Например, чтобы сделать панель &lt;audio&gt; зелёной,
         добавьте это в стили:
 

@@ -4,17 +4,21 @@
   <meta charset="utf-8">
 
   <head>
-    <link rel="stylesheet" href="../common/main.css" type="text/css" media="screen">
+    <link rel="stylesheet"
+      href="../common/main.css" type="text/css" media="screen">
 
-    <script src="index.js"></script>
+    <link rel="stylesheet" href="../common/main.css"
+      type="text/css" media="screen">
+
+    <link rel="stylesheet" href="../common/highlight/styles/dark.css"
+      type="text/css" media="screen">
+
+    <link rel="import" href="../../common/wc-example.html">
+
+
+    <!--script src="index.js"></script-->
 
     <style>
-      .shadow-host {
-        border: 3px solid #333;
-        margin-bottom: 20px;
-        padding: 20px;
-      }
-
       .border {
         border: 3px dashed red;
       }
@@ -34,82 +38,6 @@
 
     </style>
 
-    <template id="color-green">
-      <style>
-        div { background-color: green; }
-      </style>
-
-      <p>
-        Стили, которые определёны в <strong>Shadow Tree</strong>
-        распространяются только внутри этого дерева. На странице есть и
-        другие <code>divы</code>, но только здесь он зелёный.
-      </p>
-
-      <div>зелёный</div>
-    </template>
-
-    <template id="color-host">
-      <style>
-        :host {
-          background-color: aqua;
-        }
-      </style>
-
-      Изменить стили хоста можно с помощью специального селектора
-      <code>:host</code>:
-      <content></content>
-    </template>
-
-
-    <template id="reset-style-inheritance"
-      class="reset-style-inheritance">
-      <p>
-        По-умолчанию наследуемые стили, такие как <code>color</code>,
-        <code>font-size</code> и
-        <a href="http://www.impressivewebs.com/inherit-value-css/">
-          другие
-        </a>, имеют влияние на <strong>Shadow Tree</strong>.
-
-        <code>shadowRoot.resetStyleInheritance = true</code>
-        позволяет этого избежать.
-      </p>
-
-      <p>В этом примере шрифты сброшены.</p>
-
-      <content></content>
-    </template>
-
-
-    <template id="dont-apply-author-styles">
-      <p>
-        Свойство <samp>applyAuthorStyles</samp> позволяет авторским
-        стилям проникнуть в <strong>Shadow Tree</strong>.
-      </p>
-      <p>
-        В стилях документа есть описание класса <samp>.border</samp>.
-        В случае, если <samp>applyAuthorStyles = false</samp>, рамки нет:
-      </p>
-      <pre>
-
-        /* В стилях документа */
-        .border {
-          border: 3px dashed red;
-        }
-      </pre>
-
-      <div class="border">div.border</div>
-
-
-    </template>
-
-    <template id="apply-author-styles" class="apply-author-styles">
-      <p>
-        В случае, если <samp>applyAuthorStyles = true</samp>, рамка есть:
-      </p>
-
-      <div class="border">div.border</div>
-
-    </template>
 
 
     <template id="hat">
@@ -164,14 +92,237 @@
 
     <div class="content">
 
-      <div class="shadow-host">
+      <h2>
+        <a href="..">ГЛАВНАЯ</a>
+      </h2>
+
+      <h1>Стили в Shadow Tree.</h1>
+
+      <div class="warning">
+        Работает в
+
+        <a href="https://www.google.com/intl/en/chrome/browser/canary.html">
+          Chrome Canary</a>
+
+        со включенными флагами:
+        <ul>
+          <li><em>Experimental Web Platform features</em></li>
+          <li><em>Enable HTML Imports</em></li>
+        </ul>
+
+        Ссылки на флаги (копипасть):<br>
+
+        <ul>
+          <li>
+            <em>
+              chrome://flags/#enable-experimental-web-platform-features
+            </em>
+          </li>
+          <li>
+            <em>chrome://flags/#enable-html-imports</em>
+          </li>
+        </ul>
+
+      </div>
+
+      <!--div class="shadow-host">
 
         <div>
           <h4>I'm h4</h4>
           <p>I'm p</p>
         </div>
 
-      </div>
+      </div-->
+
+      <wc-example>
+        <article>
+          <h2 id="1">1. Зелёный свет.</h2>
+          <p>
+            Стили, которые определёны в <strong>shadow tree</strong>
+            имеют силу только внутри этого дерева. В этом примере
+            окрасится только <code>div</code> внутри
+            <strong>shadow tree</strong>.
+          </p>
+
+        </article>
+
+        <template id="color-green">
+          <style>
+            div { background-color: green; }
+          </style>
+
+          <div>зелёный</div>
+        </template>
+
+        <wc-markup>
+          <div class="shadow-host"></div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#color-green'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example>
+        <article>
+          <h2 id="2">2. Селектор <code>:host</code>.</h2>
+          <p>
+          Изменить стили хоста из <strong>shadow tree</strong> можно с
+          помощью специального селектора
+            <code>:host</code>.
+          </p>
+        </article>
+
+        <template id="color-host">
+          <style>
+            :host { background-color: aqua; }
+          </style>
+
+          <content></content>
+        </template>
+
+        <wc-markup>
+          <div class="shadow-host">
+            <p>Host Content</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#color-host'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example data-reset-style-inheritance>
+        <article>
+          <h2 id="3">3. Наследуемые стили.</h2>
+          <p>
+            По-умолчанию наследуемые стили, такие как <code>color</code>,
+            <code>font-size</code> и
+            <a href="http://www.impressivewebs.com/inherit-value-css/">
+              другие</a>, влияют на <strong>shadow tree</strong>.
+
+            <code>shadowRoot.resetStyleInheritance = true</code> позволяет
+            этого избежать.
+          </p>
+
+        </article>
+
+        <template id="reset">
+          <p>В этом примере шрифты сброшены.</p>
+
+          <content></content>
+        </template>
+
+
+        <wc-markup>
+          <div class="shadow-host">
+            <p>Host Content</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#reset'),
+              shadow = host.createShadowRoot();
+
+          shadow.resetStyleInheritance = true;
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example>
+        <article>
+          <h2 id="4">4. Авторские стили.</h2>
+          <p>
+            Свойство <samp>applyAuthorStyles</samp> позволяет авторским
+            стилям проникнуть в <strong>shadow tree</strong>.
+          </p>
+
+          <p>
+            В стилях документа есть описание класса <samp>.border</samp>.
+            В случае, если <samp>applyAuthorStyles = false</samp>:
+          </p>
+
+        </article>
+
+        <template id="no-author-st">
+          <div class="border">div.border</div>
+        </template>
+
+
+
+        <wc-markup>
+          <style>
+            /* В стилях документа */
+            .border {
+              border: 3px dashed red;
+            }
+          </style>
+
+          <div class="shadow-host">
+            <p>Host Content</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#no-author-st'),
+              shadow = host.createShadowRoot();
+
+          shadow.applyAuthorStyles = false; // значение по-умолчанию
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
+      <wc-example>
+        <article>
+          <h2 id="5">5. Авторские стили, продолжение.</h2>
+          <p>
+            В случае, если <samp>applyAuthorStyles = true</samp>, рамка
+            есть:
+          </p>
+
+
+        </article>
+
+        <template id="yes-author-st">
+          <div class="border">div.border</div>
+        </template>
+
+
+
+
+        <wc-markup>
+          <style>
+            /* В стилях документа */
+            .border {
+              border: 3px dashed red;
+            }
+          </style>
+
+          <div class="shadow-host">
+            <p>Host Content</p>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#yes-author-st'),
+              shadow = host.createShadowRoot();
+
+          shadow.applyAuthorStyles = true;
+          shadow.appendChild(template.content);
+        </wc-script>
+      </wc-example>
+
 
     </div>
 
