@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8"></meta>
+
+    <link
+      href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400'
+      rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="../common/main.css"
+      type="text/css" media="screen">
+
+    <link rel="stylesheet" href="../common/highlight/styles/dark.css"
+      type="text/css" media="screen">
+
+    <link rel="import" href="../../common/wc-example.html">
+
+  </head>
+
+  <body>
+
+    <div class="content">
+      <wc-example>
+        <article>
+          <h2>1. Зелёный свет</h2>
+          <p>
+            Стили, которые определёны в <strong>Shadow Tree</strong>
+            распространяются только внутри этого дерева. На странице есть и
+            другие <code>divы</code>, но только здесь он зелёный.
+          </p>
+        </article>
+
+        <wc-script>
+          var host = document.querySelector('.shadow-host'),
+              template = document.querySelector('#tmpl-green'),
+              shadow = host.createShadowRoot();
+
+          shadow.appendChild(template.content);
+        </wc-script>
+
+        <template id="tmpl-green">
+          <style>
+            div { background-color: green; }
+          </style>
+
+          <div>Зелёный</div>
+        </template>
+
+
+        <wc-markup>
+          <div class="shadow-host"></div>
+        </wc-markup>
+      </wc-example>
+    </div>
+
+  </body>
+</html>

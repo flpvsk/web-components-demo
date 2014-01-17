@@ -1,0 +1,54 @@
+<template id="wc-example-tmpl">
+  <style>
+    [data-code] {
+      position: relative;
+      padding-left: 1em;
+      padding-bottom: 2em;
+    }
+
+    [data-code]:after, .preview:after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 1px solid;
+      border-bottom: 1px solid;
+      min-width: 4em;
+      height: 1.5em;
+      text-align: center;
+      line-height: 1.5em;
+    }
+
+    [data-code=markup]:after, [data-code=tmpl]:after {
+      content: 'HTML';
+    }
+
+    [data-code=js]:after {
+      content: 'JS';
+    }
+
+    .preview {
+      position: relative;
+      border: 1px solid #444;
+      padding: 4em 2em;
+    }
+
+    .preview:after {
+      content: 'PREVIEW';
+      padding: 0 1em;
+      font-size: 0.9em;
+      font-family: 'Source Code Pro', 'monospaced';
+    }
+  </style>
+
+  <content select="article"></content>
+
+  <pre><code data-code="tmpl" class="html"></code></pre>
+  <pre><code data-code="markup"></code></pre>
+  <pre><code data-code="js"></code></pre>
+
+  <div class="preview"></div>
+</template>
+
+<script type="text/javascript"
+  src="../common/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="wc-example.js"></script>
