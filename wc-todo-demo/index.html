@@ -15,32 +15,37 @@
 
   </head>
   <body>
-    <h2>
-      <a href="..">ГЛАВНАЯ</a> |
-      <a href="https://github.com/filipovskii/web-components-demo/blob/gh-pages/wc-todo-demo/todo.html">ШАБЛОН</a> |
-      <a href="docs/todo.html">JS</a>
-    </h2>
+    <div class="content">
+      <h2>
+        <a href="..">ГЛАВНАЯ</a> |
+        <a
+          href="https://github.com/filipovskii/web-components-demo/blob/gh-pages/wc-todo-demo/index.html">SOURCE</a> |
+        <a
+          href="https://github.com/filipovskii/web-components-demo/blob/gh-pages/wc-todo-demo/todo.html">TODO.HTML</a> |
+        <a href="docs/todo.html">TODO.JS</a>
+      </h2>
 
-    <h1>TODO Widget</h1>
+      <h1>TODO Widget</h1>
 
-    <x-todo></x-todo>
+      <x-todo></x-todo>
 
-    <p>
-      API:
+      <p>
+        API:
 
-      <pre>
-<code>
-  var xTodo = document.querySelector('x-todo');
-  xTodo.items();                // список задач
-  xTodo.addItem(taskText);      // добавить
-  xTodo.removeItem(taskIndex);  // удалить
+        <pre>
+  <code>
+    var xTodo = document.querySelector('x-todo');
+    xTodo.items();                // список задач
+    xTodo.addItem(taskText);      // добавить
+    xTodo.removeItem(taskIndex);  // удалить
 
-</code>
-      </pre>
+  </code>
+        </pre>
 
-      <pre>
+        <pre>
 
-      </pre>
-    </p>
+        </pre>
+      </p>
+    </div>
   </body>
 </html>
