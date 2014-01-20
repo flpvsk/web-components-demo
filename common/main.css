@@ -62,9 +62,6 @@ wc-example:unresolved:before {
   /*height: 300px;*/
 }
 
-@media (max-width: 768px) {
-  pre code {
-    font-size: 0.8em;
-    line-height: 1.5em;
-  }
+pre code {
+  overflow-x: scroll;
 }

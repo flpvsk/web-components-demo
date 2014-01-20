@@ -16,14 +16,19 @@
       height: 1.5em;
       text-align: center;
       line-height: 1.5em;
+
+      padding: 0 0.5em;
+      font-family: 'Source Code Pro', 'monospaced';
     }
 
     [data-code=markup]:after, [data-code=tmpl]:after {
       content: 'HTML';
+      color: #ddd;
     }
 
     [data-code=js]:after {
       content: 'JS';
+      color: #ddd;
     }
 
     .preview {
@@ -34,17 +39,14 @@
 
     .preview:after {
       content: 'PREVIEW';
-      padding: 0 1em;
-      font-size: 0.9em;
-      font-family: 'Source Code Pro', 'monospaced';
     }
   </style>
 
   <content select="article"></content>
 
-  <pre><code data-code="tmpl" class="html"></code></pre>
-  <pre><code data-code="markup"></code></pre>
-  <pre><code data-code="js"></code></pre>
+  <pre data-code="tmpl"><code class="html"></code></pre>
+  <pre data-code="markup"><code></code></pre>
+  <pre data-code="js"><code></code></pre>
 
   <div class="preview"></div>
 </template>
