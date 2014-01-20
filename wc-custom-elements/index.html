@@ -3,104 +3,131 @@
   <head>
 
     <meta charset="utf-8"></meta>
-    <link rel="stylesheet" href="../common/main.css" type="text/css"
-        media="screen">
 
-    <script type="text/javascript" src="index.js"></script>
-    <script type="text/javascript"
-      src="../common/highlight/highlight.pack.js"></script>
+    <link rel="stylesheet"
+      href="../common/main.css" type="text/css" media="screen">
+
+    <link rel="stylesheet" href="../common/main.css"
+      type="text/css" media="screen">
 
     <link rel="stylesheet" href="../common/highlight/styles/dark.css"
       type="text/css" media="screen">
 
-    <template id="wc-example-tmpl">
-      <style>
-        [data-code] {
-          position: relative;
-          padding-left: 1em;
-          padding-bottom: 2em;
-        }
+    <link rel="import" href="../common/wc-example.html">
 
-        [data-code]:after, .preview:after {
-          position: absolute;
-          top: 0;
-          right: 0;
-          border-left: 1px solid;
-          border-bottom: 1px solid;
-          min-width: 4em;
-          height: 1.5em;
-          text-align: center;
-          line-height: 1.5em;
-        }
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
 
-        [data-code=markup]:after, [data-code=tmpl]:after {
-          content: 'HTML';
-        }
-
-        [data-code=js]:after {
-          content: 'JS';
-        }
-
-        .preview {
-          position: relative;
-          border: 1px solid #444;
-          padding: 4em 2em;
-        }
-
-        .preview:after {
-          content: 'PREVIEW';
-          padding: 0 1em;
-          font-size: 0.9em;
-          font-family: 'Source Code Pro', 'monospaced';
-        }
-      </style>
-
-      <content select="article"></content>
-
-      <pre><code data-code="tmpl" class="html"></code></pre>
-      <pre><code data-code="markup"></code></pre>
-      <pre><code data-code="js"></code></pre>
-
-      <div class="preview"></div>
-    </template>
-
+    <script src="index.js"></script>
   </head>
 
   <body>
+    <h2>
+      <a href="..">ГЛАВНАЯ</a>
+    </h2>
 
-    <div class="content">
-      <wc-example>
-        <article>
-          <h2>1. Зелёный свет</h2>
-          <p>
-            Стили, которые определёны в <strong>Shadow Tree</strong>
-            распространяются только внутри этого дерева. На странице есть и
-            другие <code>divы</code>, но только здесь он зелёный.
-          </p>
-        </article>
+    <h1>Custom Elements</h1>
 
-        <wc-script>
-          var host = document.querySelector('.shadow-host'),
-              template = document.querySelector('#tmpl-green'),
-              shadow = host.createShadowRoot();
+    <wc-example id="ex1">
+      <article>
+        <h2 id="1">1. Unresolved/Unknown elements</h2>
+        <p>
+          Custom Elements &mdash; элементы <abbr>DOM</abbr>, определённые
+          пользователем.  Чтобы избежать конфликтов, согласно стандарту,
+          они содержат дефис в своём названии.
+        </p>
+        <p>
+          Пользовательские элементы по-умолчанию наследуют
+          <code>HTMLElement</code>. С момента объявления элемента в
+          <abbr>HTML</abbr> и до его регистрации в <abbr>DOM</abbr>,
+          элемент находится в <em>unresolved state</em>.
+        </p>
+      </article>
 
-          shadow.appendChild(template.content);
-        </wc-script>
+      <wc-markup>
+        <dog></dog>
+        <x-dog></x-dog>
+        <dl>
+          <dt>dog type</dt>
+          <dd id="dog-type"></dd>
+          <dt>x-dog type</dt>
+          <dd id="x-dog-type"></dd>
+        </dl>
+      </wc-markup>
 
-        <template id="tmpl-green">
-          <style>
-            div { background-color: green; }
-          </style>
+      <wc-script>
+        var dog = document.querySelector('dog'),
+            dogType = document.querySelector('#dog-type'),
+            xDog = document.querySelector('x-dog'),
+            xDogType = document.querySelector('#x-dog-type');
 
-          <div>Зелёный</div>
-        </template>
+        dogType.innerText = Object.prototype.toString.apply(dog);
+        xDogType.innerText = Object.prototype.toString.apply(xDog);
+      </wc-script>
+    </wc-example>
 
+    <wc-example id="ex2">
+      <article>
+        <h2 id="2">2. API кастомного элемента</h2>
+        <p>
+          Определяйте свойства и методы кастомного элемента с помощью
+          <code>document.registerElement</code>. Используйте
+          <code>lifecycle callbacks</code>, чтобы контролировать то, как
+          элемент ведёт себя на разных этапах существования.
+        </p>
+      </article>
 
-        <wc-markup>
-          <div class="shadow-host"></div>
-        </wc-markup>
-      </wc-example>
-    </div>
+      <wc-markup>
+        <x-cat></x-cat>
+        <div>
+          <strong>Cat's life:</strong>
+          <pre id="cats-life"></pre>
+        </div>
+      </wc-markup>
+
+      <wc-script>
+        var life = document.querySelector('#cats-life'),
+            xCatProto = Object.create(HTMLElement.prototype, {
+              nickName: 'Cake', writable: true
+            });
+
+        xCatProto.meow = function () {
+          life.innerText += this.nickName + ': meow\n';
+        };
+
+        xCatProto.createdCallback = function () {
+          life.innerText += 'created\n';
+        };
+
+        xCatProto.attachedCallback = function () {
+          life.innerText += 'attached\n';
+        };
+
+        xCatProto.detachedCallback = function () {
+          life.innerText += 'detached\n';
+        };
+
+        xCatProto.attributeChangedCallback = function (name, oldVal, newVal) {
+          life.innerText += (
+            'Attribute ' + name +
+            ' changed from ' + oldVal +
+            ' to ' + newVal + '\n');
+        };
+
+        document.registerElement('x-cat', { prototype: xCatProto });
+
+        document.querySelector('x-cat').setAttribute('friend', 'Fiona');
+
+        document.querySelector('x-cat').meow();
+
+        document.querySelector('x-cat').nickName = 'Caaaaake';
+        document.querySelector('x-cat').meow();
+
+        document.querySelector('x-cat').remove();
+
+      </wc-script>
+    </wc-example>
 
   </body>
 

@@ -1,0 +1,26 @@
+<meta charset="utf-8"></meta>
+<template>
+  <style>
+    input, button, li {
+      font-size: 24px;
+      padding: 0.5em;
+      color: #333;
+    }
+
+    .todo-widget {
+      font-family: monospace;
+      border: 3px dashed #e5e5e5;
+      color: #333;
+      padding: 1em;
+    }
+  </style>
+
+  <div class="todo-widget">
+    <h1>TODOs:</h1>
+    <ul id="tasks"></ul>
+    <input id="new-task" type="text" placeholder="Задача">
+    <button id="add-todo">Добавить</button>
+  </div>
+</template>
+
+<script type="text/javascript" src="todo.js"></script>

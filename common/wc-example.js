@@ -43,7 +43,7 @@
 
 
   var wcExampleProto = Object.create(HTMLElement.prototype),
-      owner = document.currentScript.ownerDocument || document;
+      owner = (document.currentscript || {}).ownerdocument || document;
 
 
   wcExampleProto.createdCallback = function () {
@@ -60,14 +60,18 @@
         previewShadow,
         s, i, l;
 
-    if (markupEl) {
+    if (markupEl && !markupEl.attributes.hide) {
       markupHolder.innerText = clearWS(markupEl.innerHTML);
       hljs.highlightBlock(markupHolder);
+    } else {
+      markupHolder.parentNode.remove();
     }
 
     if (jsEl) {
       jsHolder.innerText = clearWS(jsEl.innerHTML);
       hljs.highlightBlock(jsHolder);
+    } else {
+      jsHolder.parentNode.remove();
     }
 
     if (tmplEl) {
@@ -79,15 +83,29 @@
       s = s + '</template>';
       tmplHolder.innerText = s;
       hljs.highlightBlock(tmplHolder);
+    } else {
+      tmplHolder.parentNode.remove();
     }
 
     shadow.appendChild(tmplBody);
     shadow.applyAuthorStyles = true;
 
-
-    for (i = 0, l = markupEl.childElementCount; i < l; i++) {
-      previewHolder.appendChild(markupEl.children[i].cloneNode(true));
+    if (!markupEl) {
+      return;
     }
+
+    while (markupEl.childNodes.length > 0) {
+      previewHolder.appendChild(markupEl.childNodes.item(0));
+    }
+
+    /*
+    previewHolder.appendChild(
+        markupEl
+          .querySelector('.shadow-host')
+          .cloneNode(true));
+    */
+
+    if (!previewHolder.querySelector('.shadow-host')) { return; }
 
     previewShadow = previewHolder
       .querySelector('.shadow-host')

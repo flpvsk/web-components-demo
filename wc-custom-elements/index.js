@@ -1,110 +1,58 @@
 (function () {
 
-  var clearWS = function (text) {
-    var min = 0,
-        start = /^\s+/,
-        end = /\s+$/,
-        lines = text.split('\n'),
-        match,
-        i, l;
-
-
-    for (i = 0, l = lines.length; i < l; i++) {
-      lines[i] = lines[i].replace(end, '');
-
-      if (lines[i].length === 0) {
-        continue;
-      }
-
-      match = lines[i].match(start);
-
-      if (!match) {
-        return text;
-      }
-
-      if (min === 0) {
-        min = match[0].length;
-        continue;
-      }
-
-      if (match[0].length < min) {
-        min = match[0].length;
-      }
-    }
-
-    if (min === 0) { return text; }
-
-    lines = lines.map(function (line) {
-      return line.slice(min);
-    });
-
-    return lines.join('\n');
+  window.onload = function () {
+    ex1();
+    ex2();
   };
 
-  window.onload = function () {
+  function ex1() {
+    var root = document.querySelector('#ex1').shadowRoot,
+        dog = root.querySelector('dog'),
+        dogType = root.querySelector('#dog-type'),
+        xDog = root.querySelector('x-dog'),
+        xDogType = root.querySelector('#x-dog-type');
 
-    var wcExampleProto = Object.create(HTMLElement.prototype);
-
-    wcExampleProto.createdCallback = function () {
-      var tmpl = document.querySelector('#wc-example-tmpl'),
-          tmplBody = document.importNode(tmpl.content, true),
-          markupHolder = tmplBody.querySelector('[data-code=markup]'),
-          markupEl = this.querySelector('wc-markup'),
-          jsHolder = tmplBody.querySelector('[data-code=js]'),
-          jsEl =  this.querySelector('wc-script'),
-          tmplHolder = tmplBody.querySelector('[data-code=tmpl]'),
-          tmplEl =  this.querySelector('template'),
-          shadow = this.createShadowRoot(),
-          previewHolder = tmplBody.querySelector('.preview'),
-          previewContent,
-          s, i, l;
-
-      if (markupEl) {
-        markupHolder.innerText = clearWS(markupEl.innerHTML);
-        hljs.highlightBlock(markupHolder);
-      }
-
-      if (jsEl) {
-        jsHolder.innerText = clearWS(jsEl.innerHTML);
-        hljs.highlightBlock(jsHolder);
-      }
-
-      if (tmplEl) {
-        s = tmplEl.outerHTML.split('\n')[0];
-        s = s + clearWS(tmplEl.innerHTML).split('\n').map(function (l) {
-          if (l.length === 0) { return l; }
-          return '  ' + l;
-        }).join('\n');
-        s = s + '</template>';
-        tmplHolder.innerText = s;
-        hljs.highlightBlock(tmplHolder);
-      }
-
-      shadow.appendChild(tmplBody);
-      shadow.applyAuthorStyles = true;
+    dogType.innerText = Object.prototype.toString.apply(dog);
+    xDogType.innerText = Object.prototype.toString.apply(xDog);
+  }
 
 
-      for (i = 0, l = markupEl.childElementCount; i < l; i++) {
-        previewHolder.appendChild(markupEl.children[i].cloneNode(true));
-      }
+  function ex2() {
+    var root = document.querySelector('#ex2').shadowRoot,
+        life = root.querySelector('#cats-life'),
+        xCatProto = Object.create(HTMLElement.prototype, {
+          nickName: { value: 'Cake', writable: true }
+        });
 
-      previewHolder
-        .querySelector('.shadow-host')
-        .createShadowRoot()
-        .appendChild(tmplEl.content);
+    xCatProto.meow = function () {
+      life.innerText += this.nickName + ': meow\n';
     };
 
-    document.registerElement('wc-markup', {
-      prototype: Object.create(HTMLElement.prototype)
-    });
+    xCatProto.createdCallback = function () {
+      life.innerText += 'created\n';
+    };
 
-    document.registerElement('wc-script', {
-      prototype: Object.create(HTMLElement.prototype)
-    });
+    xCatProto.attachedCallback = function () {
+      life.innerText += 'attached\n';
+    };
 
-    document.registerElement('wc-example', {
-      prototype: wcExampleProto
-    });
+    xCatProto.detachedCallback = function () {
+      life.innerText += 'detached\n';
+    };
 
-  };
+    xCatProto.attributeChangedCallback = function (name, oldVal, newVal) {
+      life.innerText += (
+        'Attribute ' + name +
+        ' changed from ' + oldVal +
+        ' to ' + newVal + '\n');
+    };
+
+    document.registerElement('x-cat', { prototype: xCatProto });
+
+    root.querySelector('x-cat').setAttribute('friend', 'Fiona');
+    root.querySelector('x-cat').meow();
+    root.querySelector('x-cat').nickName = 'Caaaaake';
+    root.querySelector('x-cat').meow();
+    root.querySelector('x-cat').remove();
+  }
 })();
