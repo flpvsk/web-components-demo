@@ -43,7 +43,7 @@
 
 
   var wcExampleProto = Object.create(HTMLElement.prototype),
-      owner = (document.currentscript || {}).ownerdocument || document;
+      owner = (document.currentScript || {}).ownerDocument || document;
 
 
   wcExampleProto.createdCallback = function () {
