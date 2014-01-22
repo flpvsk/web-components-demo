@@ -1,0 +1,608 @@
+<blockquote>Спустя какое время стало ясно, что основная идея Prototype вошла в противоречие с миром. Создатели браузеров ответили на возрождение Javascript добавлением новых API, многие из которых конфликтовали с реализацией Prototype.
+
+&mdash; Sam Stephenson, создатель Prototype.js, <a href="http://sstephenson.us/posts/you-are-not-your-code">You Are Not Your Code</a></blockquote>
+Создатели браузеров поступают гармонично. Решение о новых API принимают с учётом текущих трендов в opensource сообществах. Так <em>prototype.js</em> способствовал появлению <code>Array.prototype.forEach()</code>, <code>map()</code> и т.д., <em>jquery</em> вдохновил разработчиков на <code>HTMLElement.prototype.querySelector()</code> и <code>querySelectorAll()</code>.
+
+Код на стороне клиента становится сложнее и объёмнее. Появляются многочисленные фреймворки, которые помогают держать этот хаус под контролем. <em>Backbone</em>, <em>ember</em>, <em>angular</em> и другие создали, чтобы помочь писать чистый, модульный код. Фреймворки уровня приложения &mdash; это тренд. Его дух присутствует в JS среде уже какое-то время. Не удивительно, что создатели браузеров решили обратить на него внимание.
+<habracut />
+<em>Web Components</em> &mdash; это <em>черновик</em> набора стандартов. Его предложили и активно продвигают ребята из Google, но инициативу уже поддержали в Mozilla. И Microsoft. Шучу, Microsoft вообще не при делах. Мнения в комьюнити противоречивые (судя по комментариям, статьям и т.д.).
+
+Основная идея в том, чтобы позволить программистам создавать &#8220;виджеты&#8221;. Фрагменты приложения, которые изолированы от документа, в который они встраиваются. Использовать виджет возможно как с помощью HTML, так и с помощью JS API.
+
+Я пару недель игрался с новыми API и уверен, что в каком-то виде, рано или поздно эти возможности будут в браузерах. Хотя их реализация в <em>Chrome Canary</em> иногда ставила меня в тупик (меня, и сам Chrome Canary), Web Components кажется тем инструментом, которого мне не хватало.
+
+Стандарт Web Components состоит из следующих частей:
+
+<ul>
+<li>
+<a href="http://www.w3.org/TR/components-intro/#template-section">Templates</a>
+
+Фрагменты HTML, которые программист собирается использовать в будущем.
+
+Содержимое тегов <code>&lt;template&gt;</code> парсится браузером, но не вызывает выполнение скриптов и загрузку дополнительных ресурсов (изображений, аудио&hellip;) пока мы не вставим его в документ.
+
+</li>
+<li><p><a href="http://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM</a></p>
+
+<p>Инструмент инкапсуляции HTML.</p>
+
+<p>Shadow DOM позволяет изменять внутреннее представление HTML элементов, оставляя внешнее представление неизменным. Отличный пример &mdash; элементы <code>&lt;audio&gt;</code> и <code>&lt;video&gt;</code>. В коде мы размещаем один тег, а браузер отображает несколько элементов (слайдеры, кнопки, окно проигрывателя). В Chrome эти и некоторые другие элементы используют
+Shadow DOM.</p>
+
+</li>
+
+<li><p><a href="http://www.w3.org/TR/components-intro/#custom-element-section">Custom Elements</a></p>
+
+<p><em>Custom Elements</em> позволяют создавать и определять API собственных HTML элементов. Когда-нибудь мечтали о том, чтобы в HTML был тег <code>&lt;menu&gt;</code> или <code>&lt;user-info&gt;</code>?</p>
+
+</li>
+<li><p><a href="http://www.w3.org/TR/components-intro/#imports-section">Imports</a></p>
+
+<p>Импорт фрагментов разметки из других файлов.</p></li>
+</ul>
+В Web Components больше частей и маленьких деталей. Некоторые я ещё буду
+упоминать, до каких-то пока не добрался.
+
+<h3>Templates</h3>
+<p>Концепция шаблонов проста. Хотя под этим словом в стандарте подразумевается не то, к чему мы привыкли.</p>
+
+<p>В современных web-фреймворках шаблоны &mdash; это строки или фрагменты DOM, в которые мы подставляем данные перед тем как показать пользователю.</p>
+
+<blockquote>
+<p>В web components шаблоны &mdash; это фрагменты DOM. Браузер парсит их содержимое, но не выполняет до тех пор, пока мы не вставим его в документ. То есть браузер не будет загружать картинки, аудио и видео, не будет выполнять скрипты.</p>
+</blockquote>
+<p>К примеру, такой фрагмент разметки в документе не вызовет загрузку изображения.</p>
+
+<source lang="html">
+      <template id="tmpl-user">
+        <h2 class="name">Иван Иваныч</h2>
+        <img src="photo.jpg">
+      </template>
+</source>
+Хотя браузер распарсит содержимое <code>&lt;template&gt;</code>. Добраться до него можно с помощью js:
+
+<source lang="javascript">
+    var tmpl = document.querySelector('#tmpl-user');
+    // содержимое <template>
+    var content = tmpl.content;
+    var imported;
+
+    // Подставляю данные в шаблон:
+    content.querySelector('.name').innerText = 'Акакий';
+
+    // Чтобы скопировать содержимое и сделать его частью документа,
+    // используйте document.importNode()
+    //
+    // Это заставит браузер `выполнить` содержимое шаблона,
+    // в данном случае начнёт грузится картинка `photo.jpg`
+    imported = document.importNode(content);
+
+    // Результат импорта вставляю в документ:
+    document.body.appendChild(imported);
+</source>
+
+<p>Пример работы шаблонов можно посмотреть <a href="http://filipovskii.github.io/web-components-demo/wc-templates/">здесь</a>.</p>
+
+<blockquote>
+<p>Все примеры в статье следует смотреть в <a href="https://www.google.com/intl/en/chrome/browser/canary.html">Chrome Canary</a> со включенными флагами:</p>
+
+<ul>
+<li>Experimental Web Platform features</li>
+<li>Enable HTML Imports</li>
+</ul>
+</blockquote>
+<h4>Для Чего?</h4>
+<p>На данный момент существует три способа работы с шаблонами:</p>
+
+<ol>
+<li><p>Добавить шаблон в скрытый элемент на странице. Когда он будет нужен,
+ скопировать и подставить данные:</p>
+
+<source lang="html">
+        <div hidden data-template="my-template">
+          <p>Template Content</p>
+          <img></img>
+        </div>
+</source>
+<p>Минусы такого подхода в том, что браузер попытается &#8220;выполнить&#8221; код шаблона. То есть загрузить картинки, выполнить код скриптов и т.д.</p>
+
+</li>
+<li><p>Получать содержимое шаблона в виде строки (запросить AJAXом или из <code>&lt;script type=&quot;x-template&quot;&gt;</code>).</p>
+
+<source lang="html">
+         <sctipt type="x-template" data-template="my-template">
+           <p>Template Content</p>
+           <img src="{{ image }}"></img>
+         </script>
+</source>
+<p>Минус в том, что приходится работать со строками. Это создаёт угрозу XSS, нужно уделять дополнительное внимание экранированию.</p>
+
+</li>
+<li><p>Компилируемые шаблоны, вроде <a href="http://twitter.github.io/hogan.js/">hogan.js</a>, также работают со строками. Значит имеют тот же изъян, что и шаблоны второго типа.</p>
+
+</li>
+</ol>
+<p>У <code>&lt;template&gt;</code> нет этих недостатков. Мы работаем с DOM, не со строками. Когда выполнять код, также решать нам.</p>
+
+<h3>Shadow DOM</h3>
+<p>Инкапсуляция. Этого в работе с разметкой мне не хватало больше всего. Что такое Shadow DOM и как он работает проще понять на примере.</p>
+
+<p>Когда мы используем html5 элемент <code>&lt;audio&gt;</code> код выглядит примерно так:</p>
+
+<source lang="html">
+    <audio controls src="kings-speech.wav"></audio>
+</source>
+
+<p>Но на странице это выглядит так:</p>
+
+<p><img src="http://habrastorage.org/storage3/94b/521/7b3/94b5217b32b9f31b14952f0845bfec7a.png" alt="audio element" id="audio-element-img" /></p>
+
+<p>Мы видим множество контролов, прогресбар, индикатор длины аудио. Откуда эти элементы и как до них добраться? Ответ &mdash; они находятся в Shadow Tree элемента. Мы можем даже увидеть их в DevTools, если захотим.</p>
+
+<blockquote>
+<p>Чтобы Chrome в DevTools отображал содержимое Shadow DOM, в настройках DevTools, вкладка <em>General</em>, раздел <em>Elements</em> ставим галочку <em>Show Shadow DOM</em>.</p>
+</blockquote>
+<p>Содержимое Shadow DOM тега <code>&lt;audio&gt;</code> в DevTools:</p>
+
+<p><img src="http://habrastorage.org/storage3/fa4/c0a/b5d/fa4c0ab5dd9786ec68ba620b74d16f05.png" alt="devtools shadow dom" id="devtools-shadow-img" /></p>
+
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-audio/">ссылка на пример</a></p>
+
+<h5>Теория Shadow DOM</h5>
+<p><em>Shadow Tree</em> &mdash; это поддерево, которое прикреплено к элементу в документе. Элемент в этом случае называется <em>shadow host</em>, на его месте браузер показывает содержимое <em>shadow tree</em>, игнорируя содержимое самого элемента.</p>
+
+<p>Именно это происходит с <code>&lt;audio&gt;</code> тегом в примере выше, на его месте браузер рендерит содержимое <em>shadow tree</em>.</p>
+
+<p>Фишка shadow dom в том, что стили, определённые в нём с помощью <code>&lt;style&gt;</code>, не распространяются на родительский документ. Также у нас есть возможность ограничить влияние стилей родительского документа на содержимое shadow tree. Об этом позже.</p>
+
+<h5>Посадить теневое дерево</h5>
+<p><em>Shadow DOM API</em> позволяет пользователям самостоятельно создавать и
+манипулировать содержимым <em>shadow tree</em>.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <div class="shadow-host">
+      Этот текст пользователь не увидит.
+    </div>
+
+    <script>
+      var shadowHost = document.querySelector('.shadow-host');
+      var shadowRoot = shadowHost.createShadowRoot();
+
+      shadowRoot.innerText = 'Он увидит этот текст.'
+    </script>
+</source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/0b4/680/c71/0b4680c71fd746d393e11da03902d53d.png" alt="custom shadow dom" id="shadow-custom-1-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-custom/#1">ссылка на пример</a></p>
+
+<h4>Проекции, тег <code>&lt;content&gt;</code></h4>
+<p>Проекция &mdash; это использование содержимого хоста в <em>shadow tree</em>. Для этого в стандарте есть тег <code>&lt;content&gt;</code>.</p>
+
+<blockquote>
+<p>Важно, что <code>&lt;content&gt;</code> <strong>проецирует</strong> содержимое хоста, а не переносит его из хоста в shadow tree. Потомки хоста остаются на своём месте, на них распространяются стили <strong>документа</strong> (а не shadow tree). <code>&lt;content&gt;</code> это своего рода окно между мирами.</p>
+</blockquote>
+<spoiler title="пример">
+  <source lang="html">
+    <template id="content-tag">
+      <p>
+        Это содержимое
+        <strong>shadow tree</strong>.
+      </p>
+      <p>
+        Ниже проекция содержимого
+        <strong>shadow host</strong>:
+      </p>
+      <content></content>
+    </template>
+
+    <div class="shadow-host">
+      <h1 class="name">Варлам</h1>
+      <img src="varlam.png">
+      <p class="description">Бодрый Пёс</p>
+    </div>
+
+    <script>
+      var host = document.querySelector('.shadow-host'),
+          template = document.querySelector('#content-tag'),
+          shadow = host.createShadowRoot();
+
+      shadow.appendChild(template.content);
+    </script>
+
+  </source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/48f/f55/ba7/48ff55ba7ac47c137e7981344d5cfa36.png" alt="content demo" id="content-demo-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-custom/#2">ссылка на пример</a></p>
+
+<h4>Стили в Shadow DOM</h4>
+<p>Инкапсуляция стилей &mdash; основная фишка <em>shadow DOM</em>. Стили, которые определёны в <em>shadow tree</em> имеют силу только внутри этого дерева.</p>
+
+<p>Досадная особенность &mdash; использовать в <em>shadow tree</em> внешние css файлы нельзя. Надеюсь, это поправят в будущем.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <template id="color-green">
+      <style>
+        div { background-color: green; }
+      </style>
+
+      <div>зелёный</div>
+    </template>
+
+    <div class="shadow-host"></div>
+
+    <script>
+      var host = document.querySelector('.shadow-host'),
+      template = document.querySelector('#color-green'),
+      shadow = host.createShadowRoot();
+
+      shadow.appendChild(template.content);
+    </script>
+</source>
+Зелёный фон в примере получит только `&lt;div&gt;` внутри shadow tree. То
+есть стили "не вытекут" в основной документ.
+
+Результат:
+
+<p><img src="http://habrastorage.org/storage3/92c/1ce/063/92c1ce063c1704dee8721e1d885f5fee.png" alt="green" id="shadow-style-1-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-styles/#1">ссылка на пример</a></p>
+
+<h4>Наследуемые стили</h4>
+<p>По-умолчанию наследуемые стили, такие как <code>color</code>, <code>font-size</code> и <a href="http://www.impressivewebs.com/inherit-value-css/">другие</a>, <strong>влияют</strong> на содержимое shadow tree. Мы избежим этого, если установим <code>shadowRoot.resetStyleInheritance = true</code>.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <template id="reset">
+      <p>В этом примере шрифты сброшены.</p>
+
+      <content></content>
+    </template>
+
+    <div class="shadow-host">
+      <p>Host Content</p>
+    </div>
+
+    <script>
+      var host = document.querySelector('.shadow-host'),
+        template = document.querySelector('#reset'),
+        shadow = host.createShadowRoot();
+
+      shadow.resetStyleInheritance = true;
+      shadow.appendChild(template.content);
+    </script>
+</source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/6e0/39d/000/6e039d000cdb1fd91f8b4814bc18cb77.png" alt="inherit styles" id="shadow-style-3-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-styles/#3">ссылка на пример</a></p>
+
+<h4>Авторские стили</h4>
+<p>Чтобы стили документа влияли на то, как выглядит <em>shadow tree</em>, используйте свойство <code>applyAuthorStyles</code>.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <template id="no-author-st">
+      <div class="border">div.border</div>
+    </template>
+
+    <style>
+      /* В стилях документа */
+      .border {
+        border: 3px dashed red;
+      }
+    </style>
+
+    <div class="shadow-host"></div>
+
+
+    <script>
+      var host = document.querySelector('.shadow-host'),
+          template = document.querySelector('#no-author-st'),
+          shadow = host.createShadowRoot();
+
+      shadow.applyAuthorStyles = false; // значение по-умолчанию
+      shadow.appendChild(template.content);
+    </script>
+</source>
+
+<p>Изменяя значение <code>applyAuthorStyles</code>, получаем разный результат:</p>
+
+<p><code>applyAuthorStyles = false</code></p>
+
+<p><img src="http://habrastorage.org/storage3/5a1/3a9/e51/5a13a9e5183bb7279330eb12f0b7646b.png" alt="no to author styles" id="shadow-style-4-img" /></p>
+
+<p><code>applyAuthorStyles = true</code></p>
+
+<p><img src="http://habrastorage.org/storage3/e31/775/9f5/e317759f57d941fcfc402acd0486187b.png" alt="yes to author styles" id="shadow-style-5-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-styles/#3">ссылка на пример, applyAuthorStyles=false</a></p>
+
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-styles/#3">ссылка на пример, applyAuthorStyles=true</a></p>
+
+<h4>Селекторы ^ и ^^</h4>
+<p>Инкапсуляция это здорово, но если мы всё таки хотим добраться до <em>shadow tree</em> и изменить его представление из стилей документа, нам понадобится молоток. И кувалда.</p>
+
+<p>Селектор <code>div ^ p</code> аналогичен <code>div p</code> с тем исключением, что он пересекает одну теневую границу (<em>Shadow Boundary</em>).</p>
+
+<p>Селектор <code>div ^^ p</code> аналогичен предыдущему, но пересекает ЛЮБОЕ количество теневых границ.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <template id="hat">
+      <p class="shadow-p">
+        Это красный текст.
+      </p>
+    </template>
+
+    <style>
+      /* В стилях документа */
+      .shadow-host ^ p.shadow-p {
+        color: red;
+      }
+    </style>
+
+    <div class="shadow-host"></div>
+
+    <script>
+      var host = document.querySelector('.shadow-host'),
+      template = document.querySelector('#hat'),
+      shadow = host.createShadowRoot();
+
+      shadow.appendChild(template.content);
+    </script>
+</source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/b09/75a/4d4/b0975a4d44e325b873005c85f4127245.png" alt="cat in the hat" id="shadow-style-6-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-shadowdom-styles/#3">ссылка на пример</a></p>
+
+<h4>Зачем нужен Shadow DOM?</h4>
+<p>Shadow DOM позволяет изменять внутреннее представление HTML элементов, оставляя внешнее представление неизменным.</p>
+
+<p>Возможное применение &mdash; альтернатива <code>iframe</code>. Последний чересчур изолирован. Чтобы взаимодействовать с внешним документом, приходится изобретать безумные способы передачи сообщений. Изменение внешнего представления с помощью css просто невозможно.</p>
+
+<p>В отличие от <code>iframe</code>, <em>Shadow DOM</em> &mdash; это часть вашего документа. И хотя <em>shadow tree</em> в некоторой степени изолировано, при желании мы можем изменить его представление с помощью стилей, или расковырять скриптом.</p>
+
+<h3>Custom Elements</h3>
+<p><em>Custom Elements</em> &mdash; это инструмент создания своих HTML элементов. API этой части Web Components выглядит зрело и напоминает <a href="http://docs.angularjs.org/guide/directive">директивы
+Angular</a>. В сочетании с <em>Shadow DOM</em> и <em>шаблонами</em>, кастомные элементы дают возможность создавать полноценные виджеты вроде <code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code> или <code>&lt;input type=&quot;date&quot;&gt;</code>.</p>
+
+<p>Чтобы избежать конфликтов, согласно стандарту, кастомные элементы должны содержать дефис в своём названии. По-умолчанию они наследуют <code>HTMLElement</code>. Таким образом, когда браузер натыкается на разметку вида <code>&lt;my-super-element&gt;</code>, он парсит его как <code>HTMLElement</code>. В случае <code>&lt;mysuperelement&gt;</code>, результат будет <code>HTMLUnknownElement</code>.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <dog></dog>
+    <x-dog></x-dog>
+
+    <dl>
+      <dt>dog type</dt>
+      <dd id="dog-type"></dd>
+      <dt>x-dog type</dt>
+      <dd id="x-dog-type"></dd>
+    </dl>
+
+    <script>
+      var dog = document.querySelector('dog'),
+          dogType = document.querySelector('#dog-type'),
+          xDog = document.querySelector('x-dog'),
+          xDogType = document.querySelector('#x-dog-type');
+
+      dogType.innerText = Object.prototype.toString.apply(dog);
+      xDogType.innerText = Object.prototype.toString.apply(xDog);
+    </script>
+</source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/d9d/72d/5a3/d9d72d5a3279801de71c982933425f0a.png" alt="x-dog" id="custom-el-1-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-custom-elements/#1">ссылка на пример</a></p>
+
+<h4>API кастомного элемента</h4>
+<p>Мы можем определять свойства и методы у нашего элемента. Такие, как метод <code>play()</code> у элемента <code>&lt;audio&gt;</code>.</p>
+
+<p>В жизненный цикл (lifecycle) элемента входит 4 события, на каждое мы можем повесить callback:</p>
+
+<ul>
+<li>created &mdash; создан инстанс элемента</li>
+<li>attached &mdash; элемент вставлен в DOM</li>
+<li>detached &mdash; элемент удалён из DOM</li>
+<li>attributeChanged &mdash; атрибут элемента добавлен, удалён или изменён</li>
+</ul>
+<p>Алгоритм создания кастомного элемента выглядит так:</p>
+
+<ol>
+<li><p>Создаём прототип элемента.</p>
+
+<p>Прототип должен наследовать <code>HTMLElement</code> или его наследника,
+ например <code>HTMLButtonElement</code>:</p>
+
+<source lang="javascript">
+        var myElementProto = Object.create(HTMLElement.prototype, {
+          // API элемента и его lifecycle callbacks
+        });
+</source>
+</li>
+<li><p>Регистрируем элемент в DOM с помощью <code>document.registerElement()</code>:</p>
+
+<source lang="javascript">
+        var myElement = document.registerElement('my-element', {
+          prototype: myElementProto
+        });
+</source>
+</li>
+</ol>
+<spoiler title="пример">
+<source lang="html">
+    <x-cat></x-cat>
+    <div>
+      <strong>Cat's life:</strong>
+      <pre id="cats-life"></pre>
+    </div>
+
+    <script>
+      var life = document.querySelector('#cats-life'),
+          xCatProto = Object.create(HTMLElement.prototype, {
+            nickName: 'Cake', writable: true
+          });
+
+      xCatProto.meow = function () {
+        life.innerText += this.nickName + ': meow\n';
+      };
+
+      xCatProto.createdCallback = function () {
+        life.innerText += 'created\n';
+      };
+
+      xCatProto.attachedCallback = function () {
+        life.innerText += 'attached\n';
+      };
+
+      xCatProto.detachedCallback = function () {
+        life.innerText += 'detached\n';
+      };
+
+      xCatProto.attributeChangedCallback = function (name, oldVal, newVal) {
+        life.innerText += (
+          'Attribute ' + name +
+          ' changed from ' + oldVal +
+          ' to ' + newVal + '\n');
+      };
+
+      document.registerElement('x-cat', { prototype: xCatProto });
+
+      document.querySelector('x-cat').setAttribute('friend', 'Fiona');
+
+      document.querySelector('x-cat').meow();
+
+      document.querySelector('x-cat').nickName = 'Caaaaake';
+      document.querySelector('x-cat').meow();
+
+      document.querySelector('x-cat').remove();
+    </script>
+</source>
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/e2b/d5c/930/e2bd5c93064466d1a2bf3e9c3d3b5201.png" alt="cats life" id="custom-el-2-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-custom-elements/#2">ссылка на пример</a></p>
+
+<h4>Зачем нужны Custom Elements?</h4>
+<p><em>Custom Elements</em> это шаг к семантической разметке. Программистам важно создавать абстракции. Семантически-нейтральные <code>&lt;div&gt;</code> или <code>&lt;ul&gt;</code> хорошо подходят для низкоуровневой вёрстки, тогда как <em>Custom Elements</em> позволят писать модульный, удобочитаемый код на высоком уровне.</p>
+
+<p><em>Shadow DOM</em> и <em>Custom Elements</em> дают возможность создавать независимые от контекста виджеты, с удобным API и инкапсулированным внутренним представлением.</p>
+
+<h3>HTML Imports</h3>
+<p>Импорты &mdash; простое API, которому давно место в браузерах. Они дают возможность вставлять в документ фрагменты разметки из других файлов.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <link rel="import" href="widget.html">
+
+    <sctipt>
+      var link = document.querySelector('link[rel="import"]');
+
+      // Доступ к импортированному документу происходит с помощью свойства
+      // *import*.
+      var importedContent = link.import;
+
+      importedContent.querySelector('article');
+    </sctipt>
+</source>
+</spoiler>
+<h3>Object.observe()</h3>
+<p>Ещё одно приятное дополнение и часть Web Components (кажется), это API для отслеживания изменений объекта <code>Object.observe()</code>.</p>
+
+<p>Этот метод доступен в Chrome, если включить флаг <em>Experimental Web Platform features</em>.</p>
+
+<spoiler title="пример">
+<source lang="javascript">
+    var o = {};
+
+    Object.observe(o, function (changes) {
+      changes.forEach(function (change) {
+
+        // change.object содержит изменённую версию объекта
+
+        console.log('property:', change.name, 'type:', change.type);
+      });
+    });
+
+    o.x = 1     // property: x type: add
+    o.x = 2     // property: x type: update
+    delete o.x  // property: x type: delete
+</source>
+<p>При изменении объекта <code>o</code> вызывается callback, в него передаётся массив
+свойств, которые изменились.</p>
+</spoiler>
+<h3>TODO widget</h3>
+<p>Согласно древней традиции, вооружившись этими знаниями, я решил
+сделать простой TODO-виджет. В нём используются части Web Components, о которых я рассказывал в статье.</p>
+
+<p>Добавление виджета на страницу сводится к одному импорту и одному тегу в теле документа.</p>
+
+<spoiler title="пример">
+<source lang="html">
+    <html>
+      <head>
+        <link rel="import" href="todo.html">
+      </head>
+      <body>
+        <x-todo></x-todo>
+      </body>
+    </html>
+
+    <script>
+      // JS API виджета:
+      var xTodo = document.querySelector('x-todo');
+      xTodo.items();                // список задач
+      xTodo.addItem(taskText);      // добавить
+      xTodo.removeItem(taskIndex);  // удалить
+    </script>
+</source>
+
+<p>Результат:</p>
+
+<p><img src="http://habrastorage.org/storage3/922/f03/f8d/922f03f8d14c931a67f813c5bf90b947.png" alt="todo widget" id="todo-widget-img" /></p>
+</spoiler>
+<p><a href="http://filipovskii.github.io/web-components-demo/wc-todo-demo/">ссылка на демо</a></p>
+
+<h3>Заключение</h3>
+<p>С развитием html5 браузеры стали <em>нативно</em> поддерживать новые медиа-форматы. Также появились элементы вроде <code>&lt;canvas&gt;</code>. Теперь у нас огромное количество возможностей для создания интерактивных приложений на клиенте. Этот стандарт также представил элементы <code>&lt;article&gt;</code>, <code>&lt;header&gt;</code>, и другие. Разметка стала &#8220;иметь смысл&#8221;, приобрела семантику.</p>
+
+<p>На мой взгляд, Web Components &mdash; это следующий шаг. Разработчики смогут создавать интерактивные виджеты. Их легко поддерживать, переиспользовать, интегрировать.</p>
+
+<p>Код страницы не будет выглядеть как набор &#8220;блоков&#8221;, &#8220;параграфов&#8221; и &#8220;списков&#8221;. Мы сможем использовать элементы вроде &#8220;меню&#8221;, &#8220;новостная лента&#8221;, &#8220;чат&#8221;.</p>
+
+<p>Конечно, стандарт сыроват. К примеру, импорты работают не так хорошо, как шаблоны. Их использование рушило Chrome время от времени. Но объём нововведений поражает. Даже часть этих возможностей способна облегчить жизнь web-разработчикам. А некоторые заметно ускорят работу существующих фреймворков.</p>
+
+<p>Многие части Web Components можно использовать уже сейчас с помощью полифилов. <a href="http://www.polymer-project.org/">Polymer Project</a> &mdash; это полноценный фреймворк уровня приложения, который использует <em>Web Components</em>.</p>
+
+<h3>Ссылки</h3>
+<ul>
+<li><p><a href="http://www.w3.org/TR/components-intro/">Web Components Intro</a>, W3C Working Draft</p></li>
+<li><p><a href="http://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM</a>, W3C Editor&#8217;s Draft</p></li>
+<li><p><a href="http://filipovskii.github.io/web-components-demo/">Примеры к этой статье</a></p></li>
+<li><p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=811542">Bug 811542 - Implement Web Components</a>, Bugzilla@Mozilla</p></li>
+</ul>
+
+<p><a href="http://www.html5rocks.com/en/profiles/#ericbidelman">Eric Bidelman</a>, серия статей и видео о <em>Web Components</em>:</p>
+
+<ul>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/template/">HTML&#8217;s New Template Tag: standardizing client-side
+ templating</a></p></li>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/">Shadow DOM 101</a></p></li>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-201">Shadow DOM 201: CSS and Styling</a></p></li>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-301/">Shadow DOM 301: Advanced Concepts &amp; DOM APIs</a></p></li>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/customelements">Custom Elements: defining new elements in HTML</a></p></li>
+<li><p><a href="http://www.html5rocks.com/en/tutorials/webcomponents/imports/">HTML Imports: #include for the web</a></p></li>
+<li><p><a href="http://www.youtube.com/watch?v=eJZx9c6YL8k">&lt;web&gt;components&lt;/web&gt; (видео)</a></p></li>
+</ul>
+
