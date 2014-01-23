@@ -5,6 +5,10 @@ html {
   line-height: 1.5em;
 }
 
+h1, h2, h3, p {
+  line-height: 1.2em;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
 }
