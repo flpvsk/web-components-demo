@@ -23,140 +23,142 @@
   </head>
 
   <body>
-    <h2>
-      <a href="..">ГЛАВНАЯ</a>
-    </h2>
+    <div class="content">
+      <h2>
+        <a href="..">ГЛАВНАЯ</a>
+      </h2>
 
-    <h1>Custom Elements</h1>
+      <h1>Custom Elements</h1>
 
-    <div class="warning">
-      Работает в
+      <div class="warning">
+        Работает в
 
-      <a href="https://www.google.com/intl/en/chrome/browser/canary.html">
-        Chrome Canary</a>
+        <a href="https://www.google.com/intl/en/chrome/browser/canary.html">
+          Chrome Canary</a>
 
-      со включенными флагами:
-      <ul>
-        <li><em>Experimental Web Platform features</em></li>
-        <li><em>Enable HTML Imports</em></li>
-      </ul>
+        со включенными флагами:
+        <ul>
+          <li><em>Experimental Web Platform features</em></li>
+          <li><em>Enable HTML Imports</em></li>
+        </ul>
 
-      Ссылки на флаги (копипасть):<br>
+        Ссылки на флаги (копипасть):<br>
 
-      <ul>
-        <li>
-          <em>
-            chrome://flags/#enable-experimental-web-platform-features
-          </em>
-        </li>
-        <li>
-          <em>chrome://flags/#enable-html-imports</em>
-        </li>
-      </ul>
+        <ul>
+          <li>
+            <em>
+              chrome://flags/#enable-experimental-web-platform-features
+            </em>
+          </li>
+          <li>
+            <em>chrome://flags/#enable-html-imports</em>
+          </li>
+        </ul>
+
+      </div>
+
+
+      <wc-example id="ex1">
+        <article>
+          <h2 id="1">1. Unresolved/Unknown elements</h2>
+          <p>
+            Custom Elements &mdash; элементы <abbr>DOM</abbr>, определённые
+            пользователем.  Чтобы избежать конфликтов, согласно стандарту,
+            они содержат дефис в своём названии.
+          </p>
+          <p>
+            Пользовательские элементы по-умолчанию наследуют
+            <code>HTMLElement</code>. С момента объявления элемента в
+            <abbr>HTML</abbr> и до его регистрации в <abbr>DOM</abbr>,
+            элемент находится в <em>unresolved state</em>.
+          </p>
+        </article>
+
+        <wc-markup>
+          <dog></dog>
+          <x-dog></x-dog>
+          <dl>
+            <dt>dog type</dt>
+            <dd id="dog-type"></dd>
+            <dt>x-dog type</dt>
+            <dd id="x-dog-type"></dd>
+          </dl>
+        </wc-markup>
+
+        <wc-script>
+          var dog = document.querySelector('dog'),
+              dogType = document.querySelector('#dog-type'),
+              xDog = document.querySelector('x-dog'),
+              xDogType = document.querySelector('#x-dog-type');
+
+          dogType.innerText = Object.prototype.toString.apply(dog);
+          xDogType.innerText = Object.prototype.toString.apply(xDog);
+        </wc-script>
+      </wc-example>
+
+      <wc-example id="ex2">
+        <article>
+          <h2 id="2">2. API кастомного элемента</h2>
+          <p>
+            Определяйте свойства и методы кастомного элемента с помощью
+            <code>document.registerElement</code>. Используйте
+            <code>lifecycle callbacks</code>, чтобы контролировать то, как
+            элемент ведёт себя на разных этапах существования.
+          </p>
+        </article>
+
+        <wc-markup>
+          <x-cat></x-cat>
+          <div>
+            <strong>Cat's life:</strong>
+            <pre id="cats-life"></pre>
+          </div>
+        </wc-markup>
+
+        <wc-script>
+          var life = document.querySelector('#cats-life'),
+              xCatProto = Object.create(HTMLElement.prototype, {
+                nickName: 'Cake', writable: true
+              });
+
+          xCatProto.meow = function () {
+            life.innerText += this.nickName + ': meow\n';
+          };
+
+          xCatProto.createdCallback = function () {
+            life.innerText += 'created\n';
+          };
+
+          xCatProto.attachedCallback = function () {
+            life.innerText += 'attached\n';
+          };
+
+          xCatProto.detachedCallback = function () {
+            life.innerText += 'detached\n';
+          };
+
+          xCatProto.attributeChangedCallback = function (name, oldVal, newVal) {
+            life.innerText += (
+              'Attribute ' + name +
+              ' changed from ' + oldVal +
+              ' to ' + newVal + '\n');
+          };
+
+          document.registerElement('x-cat', { prototype: xCatProto });
+
+          document.querySelector('x-cat').setAttribute('friend', 'Fiona');
+
+          document.querySelector('x-cat').meow();
+
+          document.querySelector('x-cat').nickName = 'Caaaaake';
+          document.querySelector('x-cat').meow();
+
+          document.querySelector('x-cat').remove();
+
+        </wc-script>
+      </wc-example>
 
     </div>
-
-
-    <wc-example id="ex1">
-      <article>
-        <h2 id="1">1. Unresolved/Unknown elements</h2>
-        <p>
-          Custom Elements &mdash; элементы <abbr>DOM</abbr>, определённые
-          пользователем.  Чтобы избежать конфликтов, согласно стандарту,
-          они содержат дефис в своём названии.
-        </p>
-        <p>
-          Пользовательские элементы по-умолчанию наследуют
-          <code>HTMLElement</code>. С момента объявления элемента в
-          <abbr>HTML</abbr> и до его регистрации в <abbr>DOM</abbr>,
-          элемент находится в <em>unresolved state</em>.
-        </p>
-      </article>
-
-      <wc-markup>
-        <dog></dog>
-        <x-dog></x-dog>
-        <dl>
-          <dt>dog type</dt>
-          <dd id="dog-type"></dd>
-          <dt>x-dog type</dt>
-          <dd id="x-dog-type"></dd>
-        </dl>
-      </wc-markup>
-
-      <wc-script>
-        var dog = document.querySelector('dog'),
-            dogType = document.querySelector('#dog-type'),
-            xDog = document.querySelector('x-dog'),
-            xDogType = document.querySelector('#x-dog-type');
-
-        dogType.innerText = Object.prototype.toString.apply(dog);
-        xDogType.innerText = Object.prototype.toString.apply(xDog);
-      </wc-script>
-    </wc-example>
-
-    <wc-example id="ex2">
-      <article>
-        <h2 id="2">2. API кастомного элемента</h2>
-        <p>
-          Определяйте свойства и методы кастомного элемента с помощью
-          <code>document.registerElement</code>. Используйте
-          <code>lifecycle callbacks</code>, чтобы контролировать то, как
-          элемент ведёт себя на разных этапах существования.
-        </p>
-      </article>
-
-      <wc-markup>
-        <x-cat></x-cat>
-        <div>
-          <strong>Cat's life:</strong>
-          <pre id="cats-life"></pre>
-        </div>
-      </wc-markup>
-
-      <wc-script>
-        var life = document.querySelector('#cats-life'),
-            xCatProto = Object.create(HTMLElement.prototype, {
-              nickName: 'Cake', writable: true
-            });
-
-        xCatProto.meow = function () {
-          life.innerText += this.nickName + ': meow\n';
-        };
-
-        xCatProto.createdCallback = function () {
-          life.innerText += 'created\n';
-        };
-
-        xCatProto.attachedCallback = function () {
-          life.innerText += 'attached\n';
-        };
-
-        xCatProto.detachedCallback = function () {
-          life.innerText += 'detached\n';
-        };
-
-        xCatProto.attributeChangedCallback = function (name, oldVal, newVal) {
-          life.innerText += (
-            'Attribute ' + name +
-            ' changed from ' + oldVal +
-            ' to ' + newVal + '\n');
-        };
-
-        document.registerElement('x-cat', { prototype: xCatProto });
-
-        document.querySelector('x-cat').setAttribute('friend', 'Fiona');
-
-        document.querySelector('x-cat').meow();
-
-        document.querySelector('x-cat').nickName = 'Caaaaake';
-        document.querySelector('x-cat').meow();
-
-        document.querySelector('x-cat').remove();
-
-      </wc-script>
-    </wc-example>
-
   </body>
 
 </html>
