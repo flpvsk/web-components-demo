@@ -1,4 +1,4 @@
-# Web Components &mdash; это новый Web
+# Web Components &mdash; будущее Web
 
 > Спустя какое время стало ясно, что основная идея Prototype вошла в
 > противоречие с миром.  Создатели браузеров ответили на возрождение
@@ -722,6 +722,8 @@ features*.
 полифилов. [Polymer Project][polymer] &mdash; это полноценный фреймворк
 уровня приложения, который использует *Web Components*.
 
+ƒ
+
 ### Ссылки
 
 * [Web Components Intro][wc-intro], W3C Working Draft
@@ -748,8 +750,6 @@ features*.
 * [HTML Imports: #include for the web][eric-imports]
 
 * [&lt;web&gt;components&lt;/web&gt; (видео)][eric-video]
-
-
 
 
 [1]: http://sstephenson.us/posts/you-are-not-your-code
