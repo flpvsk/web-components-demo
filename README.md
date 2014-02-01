@@ -3,7 +3,9 @@
 Примеры использования web components:
 
 [http://filipovskii.github.io/web-components-demo/](http://filipovskii.github.io/web-components-demo/)
+
 [статья на хабре](http://habrahabr.ru/post/210058/)
+
 [pdf](https://github.com/filipovskii/web-components-demo/raw/gh-pages/article/index.pdf)
 
 
